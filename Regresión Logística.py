@@ -10,7 +10,7 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# --- 1. 加载数据 ---
+# --- 1. Cargar datos ---
 file_path = 'cleaned_crash_data_v1.csv' # 请确保文件名正确
 df = pd.read_csv(file_path)
 
@@ -22,12 +22,12 @@ y = df[target]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1234)
 
-# --- 2. 标准化 ---
+# --- 2. Normalización de características ---
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# --- 3. 逻辑回归优化 (Grid Search) ---
+# --- 3.  Optimización de Regresión Logística (Grid Search) ---
 print("\n[正在进行 GridSearchCV 优化计算...]")
 
 # 我们不仅优化 C，还引入了权重平衡来处理不平衡数据
@@ -46,7 +46,7 @@ grid_log = GridSearchCV(
 grid_log.fit(X_train_scaled, y_train)
 
 
-# --- 4. 打印 证据表  ---
+# --- 4. Imprimir tabla de evidencia de resultados  ---
 print("\n" + "="*60)
 print("   SECCIÓN 7: EVIDENCIA DE OPTIMIZACIÓN (LOGISTIC REGRESSION)")
 print("="*60)
@@ -55,7 +55,7 @@ evidence = results[['param_C', 'mean_test_score', 'rank_test_score']].sort_value
 print(evidence.to_string(index=False))
 print("="*60)
 
-# --- 5. 最终结果展示 ---
+# --- 5. Mostrar resultados finales del modelo ---
 best_model = grid_log.best_estimator_
 y_pred = best_model.predict(X_test_scaled)
 print(f"\nMejor parámetro C: {grid_log.best_params_['C']}")
@@ -63,7 +63,7 @@ print(f"Precisión Final (Balanced): {accuracy_score(y_test, y_pred):.4f}")
 print("\nInforme de Clasificación Detallado:")
 print(classification_report(y_test, y_pred))
 
-# --- 6. 可视化变量重要性 ---
+# --- 6. Visualización de la importancia de las variables ---
 plt.figure(figsize=(10, 6))
 coeffs = best_model.coef_[0]
 sns.barplot(x=coeffs, y=features, palette='viridis')
